@@ -1,5 +1,5 @@
 {
-  "name": "capsaty",
+  "name": "jwt",
   "version": "1.0.0",
   "description": "backend",
   "main": "index.js",
