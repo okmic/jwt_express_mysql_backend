@@ -1,0 +1,233 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OpenAPI Auth",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3030/api",
+      "description": "Dev server JWT Express"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Метод авторизации",
+        "description": "Валидация только на мин-макс длину строки (login - max 300 min 3, password -  max 100 min 5)",
+        "operationId": "login",
+        "tags": [
+          "auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string",
+                    "example": "login"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password123"
+                  },
+                  "remember": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Подтверждение успешного сохранения",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/authResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректные входные данные. Возвращает список атрибутов с ошибками",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "summary": "Сброс авторизации",
+        "description": "Сброс токенов",
+        "operationId": "logout",
+        "tags": [
+          "auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Подтверждение успешного сохранения",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/authResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректные входные данные. Возвращает список атрибутов с ошибками",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/refresh": {
+      "get": {
+        "summary": "Обновление токенов",
+        "description": "Обновление токенов",
+        "operationId": "refresh",
+        "tags": [
+          "auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Подтверждение успешного сохранения",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/authResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректные входные данные. Возвращает список атрибутов с ошибками",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/change-password": {
+      "post": {
+        "summary": "Смена пароля",
+        "description": "Смена пароля",
+        "operationId": "changePassword",
+        "tags": [
+          "auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Подтверждение успешного сохранения",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/authResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректные входные данные. Возвращает список атрибутов с ошибками",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "authResponse": {
+        "type": "object",
+        "properties": {
+          "accessTonek": {
+            "type": "string"
+          },
+          "refreshTonek": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/user"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "integer"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "string",
+            "example": "any type"
+          }
+        }
+      }
+    }
+  }
+}

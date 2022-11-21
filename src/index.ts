@@ -1,9 +1,13 @@
-const express = require('express')
-const cookieParser = require('cookie-parser')
-const cors = require('cors') 
-require('dotenv').config()
-const router = require('./router/index')
-const errorMiddleware = require("./midlewares/error-middleware")
+import express from 'express'
+import cookieParser from 'cookie-parser'
+import cors from 'cors' 
+import dotenv from "dotenv"
+import router from './router/auth.route'
+import errorMiddleware from "./midlewares/error-middleware"
+import swagger from "swagger-ui-express"
+import * as swaggerDoc from "./swagger/authapi.json"
+
+dotenv.config()
 
 const app = express()
 
@@ -16,6 +20,7 @@ app.use(cors({
     origin: process.env.CLIENT_URL
 }))
 app.use('/api', router)
+app.use('/api-docs', swagger.serve, swagger.setup(swaggerDoc))
 app.use(errorMiddleware)
 
 const start = () => {
@@ -25,4 +30,5 @@ const start = () => {
         console.error(e)
     }
 }
+
 start()

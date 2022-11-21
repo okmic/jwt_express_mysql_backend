@@ -1,22 +1,25 @@
-const ApiError = require("../exceptions/api-error")
-const tokenService = require("../service/token.service")
+import {Request, Response, NextFunction} from "express"
+import ApiError from "../exceptions/api-error"
+import tokenService from "../service/token.service"
 
-module.exports = function (req, res, next) {
+export default () => (req: Request, res: Response, next: NextFunction) => {
     try {
         const authHeader = req.headers.authorization
+
         if(!authHeader) {
             next(ApiError.UnauthorizedError())
+            return
         }
         //berer
         const accessToken = authHeader.split(" ")[1]
         if(!accessToken) {
             next(ApiError.UnauthorizedError())
         }
-        const userData = tokenService.validateToken(accessToken, process.env.JWT_ACCESS_SECRET_KEY)
+        const userData = tokenService.validateToken(accessToken, "access")
         if(!userData) {
             return next(ApiError.UnauthorizedError())
         }
-
+        //@ts-ignore
         req.user = userData
         next()
     } catch (e) {
